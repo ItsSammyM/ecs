@@ -20,6 +20,14 @@ impl<'a, T: QueryParamter, F: QueryFilter> Query<'a, T, F> {
         }
     }
 }
+impl<'a, T: QueryParamter, F: QueryFilter> Query<'a, T, F> {
+    pub fn iter_mut<'b>(&'b mut self) -> QueryIterator<'b, &'b mut T::Item<'a>> {
+        QueryIterator{
+            value: self.value.iter_mut().collect(),
+            _marker: PhantomData,
+        }
+    }
+}
 pub struct QueryIterator<'a, T>{
     value: VecDeque<T>,
     _marker: PhantomData<&'a T>
