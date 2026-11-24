@@ -122,4 +122,7 @@ impl<'a> EntitySpawnBuilder<'a>{
     pub fn add_bundle<B: Bundle + 'static>(self, bundle: B) -> Self {
         bundle.add_bundle(self)
     }
+    pub fn entity_id(&self) -> EntityId {
+        self.id
+    }
 }
