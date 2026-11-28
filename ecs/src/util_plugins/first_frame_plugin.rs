@@ -19,6 +19,7 @@ impl IsFirstFrame{
     }
 }
 impl SchedulerBuilder{
+    /// Requires the FirstFramePlugin to be added AFTER all add_start_system systems
     pub fn add_start_system<Input, S: SystemContainerTrait + 'static>(self, system: impl IntoSystem<Input, System = S>)->Self{
         self.add_conditional_system(|r: Res<IsFirstFrame>|r.is_first_frame(), system)
     }

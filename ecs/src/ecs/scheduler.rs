@@ -32,12 +32,30 @@ impl Scheduler {
     pub fn add_resource<C: Component + 'static>(&mut self, component: C) {
         self.components.add_resource(component);
     }
-    pub fn run(&mut self) {
+    
+    pub fn run_one_frame(&mut self) {
         self.systems.run(&mut self.components);
         Commands::after_run(&mut self.components);
     }
+    /// Calls run repeatedly
+    /// 
+    /// 
+    /// # Examples
+    /// ```
+    /// //10 fps
+    /// app.run_blocking(10.0);
+    /// app.run_blocking(SchedulerTargetFramerate::Target(10.0));
+    /// 
+    /// // max fps
+    /// app.run_blocking(0.0);
+    /// app.run_blocking(-10.0);
+    /// app.run_blocking(SchedulerTargetFramerate::Max);
+    /// 
+    /// //this will cause a panic
+    /// //app.run_blocking(SchedulerTargetFramerate::Target(-10.0));
+    /// ```
     /// # Panics 
-    /// panic if target_framerate <= 0
+    /// target_framerate <= 0
     pub fn run_blocking(mut self, target_framerate: impl Into<SchedulerTargetFramerate>) {
         match target_framerate.into() {
             SchedulerTargetFramerate::Target(fps) => {
@@ -46,12 +64,12 @@ impl Scheduler {
                 loop {
                     if Instant::now() < next_frame {continue}
                     next_frame = Instant::now() + desired_dt;
-                    self.run();
+                    self.run_one_frame();
                 }
             },
             SchedulerTargetFramerate::Max => {
                 loop {
-                    self.run();
+                    self.run_one_frame();
                 }
             },
         };

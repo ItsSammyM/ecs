@@ -2,6 +2,7 @@ use std::time::{Duration, Instant};
 use crate::prelude::{Plugin, ResMut};
 use ecs_macros::ComponentInCrate;
 
+/// Add this component using TimePlugin
 #[derive(ComponentInCrate)]
 pub struct DeltaTime{
     previous_frame: Instant,
@@ -19,6 +20,8 @@ impl DeltaTime{
     }
 }
 
+
+/// Adds DeltaTime resource
 pub struct TimePlugin;
 impl Plugin for TimePlugin {
     fn add_plugin(self, builder: crate::prelude::SchedulerBuilder)->crate::prelude::SchedulerBuilder {
@@ -64,7 +67,7 @@ impl Timer{
     pub fn new(duration: Duration, repeat: bool)->Self{
         Self { start: Instant::now(), duration, state: if repeat {TimerState::Repeat} else {TimerState::Once} }
     }
-    //returns self.just_finished()
+    /// returns self.just_finished()
     pub fn tick(&mut self) -> bool {
         if self.state.is_repeat() {
             self.state = TimerState::Repeat;

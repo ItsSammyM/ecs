@@ -2,6 +2,7 @@ use std::{any::TypeId, cell::RefCell};
 
 use crate::{ecs::component::components::Components, prelude::*};
 
+#[allow(private_bounds)]
 pub trait Component: ComponentGetBoxedAny{}
 
 

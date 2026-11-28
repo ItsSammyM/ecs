@@ -11,7 +11,7 @@ impl<'res, T: 'static> SystemParameter for Res<'res, T> {
 
     fn retrieve<'r>(components: &'r Components) -> <Res<'res, T> as SystemParameter>::Item<'r> {
         Res {
-            value: components.get(&(EntityId::new(0), TypeId::of::<T>())).unwrap().borrow(),
+            value: components.get(&(EntityId::new(0), TypeId::of::<T>())).expect("Resource is missing").borrow(),
             _marker: PhantomData,
         }
     }
@@ -35,7 +35,7 @@ impl<'res, T: 'static> SystemParameter for ResMut<'res, T> {
 
     fn retrieve<'r>(components: &'r Components) -> <ResMut<'res, T> as SystemParameter>::Item<'r> {
         ResMut {
-            value: components.get(&(EntityId::new(0), TypeId::of::<T>())).unwrap().borrow_mut(),
+            value: components.get(&(EntityId::new(0), TypeId::of::<T>())).expect("Resource is missing").borrow_mut(),
             _marker: PhantomData,
         }
     }

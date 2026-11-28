@@ -1,4 +1,4 @@
-use std::{any::{Any, TypeId}, cell::{RefCell, RefMut}, collections::HashMap};
+use std::{any::{Any, TypeId}, cell::RefCell, collections::HashMap};
 use crate::prelude::*;
 
 pub struct Components(pub(crate) HashMap<(EntityId, TypeId), RefCell<Box<dyn Any>>>);
@@ -12,11 +12,11 @@ impl Components{
     pub(crate) fn get(&self, key: &(EntityId, TypeId)) -> Option<&RefCell<Box<dyn Any>>>{
         self.0.get(key)
     }
-    pub(crate) fn get_component<C: Component + 'static>(&self, entity: EntityId) -> Option<RefMut<'_, C>>{
-        self
-            .get(&(entity, TypeId::of::<C>()))
-            .map(|r| RefMut::map(r.borrow_mut(), |r: &mut Box<dyn Any + 'static>|r.downcast_mut::<C>().unwrap()))
-    }
+    // pub(crate) fn get_component<C: Component + 'static>(&self, entity: EntityId) -> Option<RefMut<'_, C>>{
+    //     self
+    //         .get(&(entity, TypeId::of::<C>()))
+    //         .map(|r| RefMut::map(r.borrow_mut(), |r: &mut Box<dyn Any + 'static>|r.downcast_mut::<C>().unwrap()))
+    // }
     pub(crate) fn drain(&mut self) -> impl Iterator<Item = ((EntityId, TypeId), RefCell<Box<dyn Any>>)> {
         self.0.drain()
     }
@@ -35,9 +35,9 @@ impl Components{
                 RefCell::new(Box::new(component))
             );
     }
-    pub(crate) fn remove_component<C: Component + 'static>(&mut self, entity: EntityId) -> Option<RefCell<Box<dyn Any + 'static>>>{
-        self.0.remove(&(entity, TypeId::of::<C>()))
-    }
+    // pub(crate) fn remove_component<C: Component + 'static>(&mut self, entity: EntityId) -> Option<RefCell<Box<dyn Any + 'static>>>{
+    //     self.0.remove(&(entity, TypeId::of::<C>()))
+    // }
     pub(crate) fn remove_entity(&mut self, entity: EntityId) {
         self.0.retain(|(e, _), _|*e != entity);
     }
